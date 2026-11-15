@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cercacasa di Riccardo</title>
+<style>
+  :root {
+    --sfondo: #f6f4ef; --carta: #ffffff; --testo: #1f2328; --tenue: #667085;
+    --bordo: #e4e0d8; --accento: #1f6f5c; --accento-tenue: #e3f1ec;
+    --nuovo: #b54708; --nuovo-tenue: #fef0e6; --no: #9aa0a6;
+    --stagione: #7a4bb0; --stagione-tenue: #f1e9fa; --stella: #8a5a00; --stella-tenue: #fdecc8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --sfondo: #15171a; --carta: #1e2125; --testo: #e8e6e3; --tenue: #9aa3ad;
+      --bordo: #30343a; --accento: #5cc3a4; --accento-tenue: #1d332d;
+      --nuovo: #f5a35c; --nuovo-tenue: #3a2a1c; --no: #5f656c;
+      --stagione: #c3a2ec; --stagione-tenue: #2c2338; --stella: #f0c869; --stella-tenue: #3a3017;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--sfondo); color: var(--testo);
+         font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { padding: 20px 16px 8px; max-width: 1100px; margin: 0 auto; }
+  h1 { margin: 0; font-size: 1.5rem; }
+  h2 { font-size: 1.15rem; margin: 28px 0 8px; }
+  .sotto { color: var(--tenue); margin: 4px 0 0; }
+  main { max-width: 1100px; margin: 0 auto; padding: 8px 16px 40px;
+         display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+
+  form.criteri { background: var(--carta); border: 1px solid var(--bordo); border-radius: 12px;
+                 padding: 16px; position: sticky; top: 12px; }
+  @media (max-width: 800px) { form.criteri { position: static; } }
+  fieldset { border: 0; padding: 0; margin: 0 0 14px; }
+  legend { font-weight: 600; margin-bottom: 6px; }
+  .coppia { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  label.campo { display: block; font-size: .85rem; color: var(--tenue); }
+  input[type=number] { width: 100%; padding: 8px; border: 1px solid var(--bordo); border-radius: 8px;
+                       background: var(--sfondo); color: var(--testo); font-size: 1rem; }
+  .pillole { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pillole label { border: 1px solid var(--bordo); border-radius: 999px; padding: 4px 10px;
+                   cursor: pointer; font-size: .9rem; user-select: none; }
+  .pillole input { display: none; }
+  .pillole label:has(input:checked) { background: var(--accento-tenue); border-color: var(--accento);
+                                      color: var(--accento); font-weight: 600; }
+  button.salva { width: 100%; padding: 10px; border: 0; border-radius: 8px; background: var(--accento);
+                 color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; }
+  .stato { font-size: .85rem; color: var(--tenue); min-height: 1.2em; margin: 6px 0 14px; }
+  @media (max-width: 800px) {
+    button.salva { position: fixed; left: 16px; right: 16px; bottom: 12px; width: auto; z-index: 10;
+                   box-shadow: 0 4px 14px rgba(0,0,0,.25); padding: 14px; }
+    body { padding-bottom: 72px; }
+  }
+
+  .barra { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+           margin-bottom: 12px; }
+  .conteggio { font-size: 1.1rem; }
+  .conteggio b { font-size: 1.4rem; }
+  .filtri-vista label { margin-left: 10px; font-size: .9rem; cursor: pointer; }
+  .filtri-vista select { font: inherit; background: var(--carta); color: var(--testo);
+                         border: 1px solid var(--bordo); border-radius: 6px; padding: 2px 4px; }
+
+  .annuncio { background: var(--carta); border: 1px solid var(--bordo); border-radius: 12px;
+              padding: 14px 16px; margin-bottom: 10px; display: grid;
+              grid-template-columns: 1fr auto; gap: 6px 16px; }
+  .annuncio.scartato { opacity: .45; }
+  .annuncio.nuovo { border-left: 4px solid var(--nuovo); }
+  .annuncio.ribasso { border-left: 4px solid var(--accento); }
+  .titolo { font-weight: 600; }
+  .titolo a { color: inherit; }
+  .etichetta { display: inline-block; font-size: .75rem; font-weight: 700; padding: 1px 8px;
+               border-radius: 999px; background: var(--nuovo-tenue); color: var(--nuovo); margin: 0 6px 3px 0; }
+  .etichetta.ribasso { background: var(--accento-tenue); color: var(--accento); }
+  .etichetta.stagione { background: var(--stagione-tenue); color: var(--stagione); }
+  .etichetta.anno { background: var(--accento-tenue); color: var(--accento); }
+  .etichetta.stella { background: var(--stella-tenue); color: var(--stella); }
+  .etichetta.fonte { background: var(--bordo); color: var(--testo); }
+  .numeri { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--tenue); font-size: .95rem; }
+  .numeri b { color: var(--testo); }
+  .nota { color: var(--tenue); font-size: .85rem; margin-top: 4px; }
+  .prezzo { text-align: right; }
+  .prezzo .vecchio { color: var(--tenue); text-decoration: line-through; font-size: .9rem; }
+  .prezzo .euro { font-size: 1.25rem; font-weight: 700; white-space: nowrap; }
+  .prezzo .mq { color: var(--accento); font-weight: 600; white-space: nowrap; }
+  .prezzo .confronto { font-size: .85rem; color: var(--tenue); cursor: help; max-width: 190px; margin-left: auto; }
+  .agenzia { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+             justify-content: space-between; border-top: 1px solid var(--bordo); padding-top: 8px; font-size: .9rem; }
+  a.tel { color: var(--accento); font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .voti button { border: 1px solid var(--bordo); background: transparent; color: var(--testo);
+                 border-radius: 8px; padding: 5px 10px; cursor: pointer; font-size: .9rem; }
+  .voti button.attivo.si { background: var(--accento); border-color: var(--accento); color: #fff; }
+  .voti button.attivo.no { background: var(--no); border-color: var(--no); color: #fff; }
+  .vuoto { background: var(--carta); border: 1px dashed var(--bordo); border-radius: 12px; padding: 24px;
+           color: var(--tenue); text-align: center; }
+  details.agenzie { background: var(--carta); border: 1px solid var(--bordo); border-radius: 12px; padding: 12px 16px; margin-top: 24px; }
+  details.agenzie summary { font-weight: 600; cursor: pointer; }
+  .riga-agenzia { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between;
+                  border-top: 1px solid var(--bordo); padding: 7px 0; font-size: .92rem; }
+  .riga-agenzia span.dove { color: var(--tenue); }
+  footer { max-width: 1100px; margin: 0 auto; padding: 0 16px 24px; color: var(--tenue); font-size: .8rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Il cercacasa di Riccardo</h1>
+  <p class="sotto">Affitti da La Nucía e Benidorm fino ad Alicante e Playa de San Juan.&nbsp;<span id="fonte">Caricamento…</span></p>
+</header>
+
+<main>
+  <form class="criteri" id="criteri">
+    <button class="salva" type="submit">🔄 Aggiorna la ricerca</button>
+    <div class="stato" id="stato"></div>
+    <fieldset>
+      <legend>Affitto al mese (€)</legend>
+      <div class="coppia">
+        <label class="campo">minimo <input type="number" name="prezzo_min" min="0" step="50"></label>
+        <label class="campo">massimo <input type="number" name="prezzo_max" min="0" step="50"></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Camere da letto</legend>
+      <div class="pillole" id="camere"></div>
+    </fieldset>
+    <fieldset>
+      <legend>Contratto</legend>
+      <div class="pillole" id="contratto"></div>
+    </fieldset>
+    <fieldset>
+      <legend>Metri quadri</legend>
+      <div class="coppia">
+        <label class="campo">da <input type="number" name="mq_min" min="0" step="5"></label>
+        <label class="campo">a <input type="number" name="mq_max" min="0" step="5"></label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Comuni <span class="sotto" style="font-weight:400">(nessuno = tutti)</span></legend>
+      <div class="pillole" id="comuni"></div>
+      <div class="pillole" style="margin-top:8px">
+        <label><input type="checkbox" name="solo_preferite"> ★ solo le zone preferite</label>
+      </div>
+      <p class="sotto" style="font-size:.8rem">Preferite: Playa de San Juan (Alicante) e Cala de Finestrat.</p>
+    </fieldset>
+  </form>
+
+  <section>
+    <div class="barra">
+      <div class="conteggio" id="conteggio"></div>
+      <div class="filtri-vista">
+        <label><input type="checkbox" id="soloNuovi"> solo le novità</label>
+        <label><input type="checkbox" id="soloRibassi"> solo i prezzi scesi</label>
+        <label><input type="checkbox" id="soloPrivati"> solo privati</label>
+        <label><input type="checkbox" id="nascondiNo" checked> nascondi i "no"</label>
+        <label>ordina per <select id="ordine">
+          <option value="preferite">zone preferite, poi prezzo</option>
+          <option value="prezzo">affitto più basso</option>
+          <option value="mediana">più sotto il prezzo della zona</option>
+          <option value="euro_mq">€/m² più basso</option>
+          <option value="recenti">visti per ultimi</option>
+        </select></label>
+      </div>
+    </div>
+    <div id="elenco"></div>
+    <details class="agenzie" id="agenzie"><summary>Le agenzie che affittano in zona</summary><div id="elencoAgenzie"></div></details>
+  </section>
+</main>
+<footer>Annunci letti da Fotocasa, Habitaclia e Pisos.com per uso personale: per i dettagli si apre sempre l'annuncio originale.
+Una casa pubblicata su più siti compare una volta sola, con "anche su". Idealista non si lascia leggere dai programmi: lì si guarda a mano.
+"Stagionale" lo dichiara il sito; "forse stagionale" e "tutto l'anno" vengono dalle parole dell'annuncio: prima di muoversi si chiede sempre all'agenzia.
+Il prezzo della zona è la mediana, in euro al m² al mese, degli annunci letti oggi nello stesso quartiere (o nel comune, se nel quartiere sono meno di 8): non è un valore ufficiale.</footer>
+
+<script src="statico.js"></script>
+<script>
+const CAMERE = [0, 1, 2, 3, 4];
+const CONTRATTI = [["tutti", "tutti"], ["anno", "tutto l'anno"], ["stagionali", "solo stagionali"]];
+// Tutto cio' che arriva dai siti passa da qui prima di finire nella pagina.
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const euro = n => n == null ? "—" : n.toLocaleString("it-IT") + " €";
+const dec = n => n.toLocaleString("it-IT", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const giorno = (d, mese = "long") => d ? new Date(d).toLocaleDateString("it-IT", { day: "numeric", month: mese }) : "";
+const linkSicuro = u => /^https:\/\//.test(u || "") ? u : "#";
+let dati = { annunci: [] };
+
+function pillole(contenitore, nome, valori, scelti, etichetta = v => v, tipo = "checkbox") {
+  contenitore.innerHTML = valori.map(v =>
+    `<label><input type="${tipo}" name="${nome}" value="${esc(v)}" ${scelti.includes(v) ? "checked" : ""}>${esc(etichetta(v))}</label>`
+  ).join("");
+}
+
+async function caricaCriteri() {
+  const { criteri, comuni } = await (await fetch("/api/criteri")).json();
+  const f = document.getElementById("criteri");
+  for (const k of ["mq_min", "mq_max", "prezzo_min", "prezzo_max"]) f[k].value = criteri[k] || "";
+  f.solo_preferite.checked = criteri.solo_preferite;
+  pillole(document.getElementById("camere"), "camere", CAMERE, criteri.camere, v => v === 0 ? "monolocale" : v === 4 ? "4+" : v);
+  pillole(document.getElementById("contratto"), "contratto", CONTRATTI.map(c => c[0]), [criteri.contratto],
+          v => CONTRATTI.find(c => c[0] === v)[1], "radio");
+  pillole(document.getElementById("comuni"), "comuni", comuni, criteri.comuni);
+}
+
+function leggiModulo() {
+  const f = document.getElementById("criteri");
+  const num = k => Number(f[k].value) || 0;
+  const scelti = n => [...f.querySelectorAll(`input[name=${n}]:checked`)].map(i => i.value);
+  return {
+    mq_min: num("mq_min"), mq_max: num("mq_max"), prezzo_min: num("prezzo_min"), prezzo_max: num("prezzo_max"),
+    camere: scelti("camere").map(Number), contratto: scelti("contratto")[0] || "tutti",
+    comuni: scelti("comuni"), solo_preferite: f.solo_preferite.checked,
+  };
+}
+
+async function caricaAnnunci() {
+  dati = await (await fetch("/api/annunci")).json();
+  document.getElementById("fonte").textContent = dati.data
+    ? `Annunci del ${giorno(dati.data)}: ${dati.totale_foto.toLocaleString("it-IT")} letti senza doppioni (` +
+      Object.entries(dati.fonti || {}).map(([f, n]) => `${f} ${n.toLocaleString("it-IT")}`).join(", ") + ")" +
+      (dati.precedente ? `, confrontati con il ${giorno(dati.precedente)}.` : ". Dalla prossima raccolta si vedono le novità.")
+    : "Nessuna raccolta di annunci: lancia riccardo/giro.py";
+  disegna();
+}
+
+function contratto(a) {
+  if (a.stagionale === "si") return '<span class="etichetta stagione" title="Lo dichiara il sito: affitto de temporada">STAGIONALE</span>';
+  if (a.stagionale === "forse") return '<span class="etichetta stagione" title="Lo fanno pensare le parole dell\'annuncio: da chiedere">FORSE STAGIONALE</span>';
+  if (a.stagionale === "no") return '<span class="etichetta anno" title="L\'annuncio parla di lunga durata: da chiedere comunque">TUTTO L\'ANNO</span>';
+  return "";
+}
+
+function confronto(a) {
+  if (a.sotto_mediana == null) return "";
+  const dove = `Mediana di ${a.mediana_n} annunci a ${a.mediana_dove}: ${dec(a.mediana)} €/m² al mese` +
+    (a.media_fotocasa ? `. Prezzo medio di ${a.comune} secondo Fotocasa: ${dec(a.media_fotocasa)} €/m²` : "");
+  const testo = a.sotto_mediana > 0 ? `${a.sotto_mediana}% sotto` : a.sotto_mediana < 0 ? `${-a.sotto_mediana}% sopra` : "in linea con";
+  return `<div class="confronto" title="${esc(dove)}">${testo} il prezzo di ${esc(a.mediana_dove)}${a.sotto_mediana >= 35 ? " · ⚠ da verificare" : ""}</div>`;
+}
+
+function disegna() {
+  const acceso = id => document.getElementById(id).checked;
+  const ordine = document.getElementById("ordine").value;
+  const visibili = dati.annunci.filter(a => (!acceso("soloNuovi") || a.nuovo) && (!acceso("soloRibassi") || a.calo_totale)
+    && (!acceso("soloPrivati") || a.agenzia === "Privato") && !(acceso("nascondiNo") && a.voto === "no"));
+  const chiave = {
+    preferite: a => (a.preferita ? 0 : 1e7) + (a.prezzo ?? 1e6),
+    prezzo: a => a.prezzo ?? 1e9,
+    mediana: a => -(a.sotto_mediana ?? -1e9),
+    euro_mq: a => a.euro_mq ?? 1e9,
+    recenti: a => -new Date(a.visto_dal).getTime(),
+  }[ordine];
+  visibili.sort((x, y) => chiave(x) - chiave(y));
+  const conta = f => dati.annunci.filter(f).length;
+  document.getElementById("conteggio").innerHTML =
+    `<b>${dati.annunci.length}</b> affitti adatti · <b>${conta(a => a.preferita)}</b> in zona preferita` +
+    (dati.precedente ? ` · <b>${conta(a => a.nuovo)}</b> nuovi · <b>${conta(a => a.calo_totale)}</b> col prezzo sceso` : "");
+  const elenco = document.getElementById("elenco");
+  if (!visibili.length) {
+    elenco.innerHTML = `<div class="vuoto">Nessun affitto con questi criteri. Prova ad alzare l'affitto massimo o ad aggiungere camere e comuni.</div>`;
+    return;
+  }
+  elenco.innerHTML = visibili.map(a => `
+    <article class="annuncio ${a.nuovo ? "nuovo" : ""} ${a.calo_totale ? "ribasso" : ""} ${a.voto === "no" ? "scartato" : ""}">
+      <div>
+        <div class="titolo">${a.nuovo ? '<span class="etichetta">NUOVO</span>' : ""}${a.calo_totale ? `<span class="etichetta ribasso">PREZZO SCESO −${euro(a.calo_totale)}</span>` : ""}${a.preferita ? '<span class="etichetta stella">★ ZONA PREFERITA</span>' : ""}${contratto(a)}${a.agenzia === "Privato" ? '<span class="etichetta fonte">PRIVATO</span>' : ""}<span class="etichetta fonte">${esc(a.fonte).toUpperCase()}</span>
+          <a href="${esc(linkSicuro(a.link))}" target="_blank" rel="noopener">${esc(a.tipo || "Casa")} a ${esc(a.comune)}${a.zona && a.zona !== a.comune ? " · " + esc(a.zona) : ""}</a></div>
+        <div class="numeri"><span>${esc(a.indirizzo || "via non indicata")}</span>
+          <span><b>${esc(a.mq ?? "?")}</b> m²</span><span>${a.camere === 0 ? "<b>monolocale</b>" : `<b>${esc(a.camere ?? "?")}</b> ${a.camere === 1 ? "camera" : "camere"}`}</span><span><b>${esc(a.bagni ?? "?")}</b> ${a.bagni === 1 ? "bagno" : "bagni"}</span><span>visto dal ${esc(giorno(a.visto_dal, "short"))}</span></div>
+        ${a.nota ? `<div class="nota">${esc(a.nota)}…</div>` : ""}
+      </div>
+      <div class="prezzo">${a.calo_totale ? `<div class="vecchio">${euro(a.prezzo_iniziale)}</div>` : ""}<div class="euro">${euro(a.prezzo)}<span style="font-size:.8rem;font-weight:400"> /mese</span></div>
+        <div class="mq">${a.euro_mq ? dec(a.euro_mq) + " €/m²" : ""}</div>
+        ${confronto(a)}</div>
+      <div class="agenzia">
+        <span>${esc(a.agenzia || "agenzia sull'annuncio")}${a.telefono ? ` · <a class="tel" href="tel:+34${esc(a.telefono.replace(/\D/g, ""))}">+34 ${esc(a.telefono)}</a>` : ` · telefono sull'annuncio`}${a.anche_su ? ` · anche su ${esc(a.anche_su)}` : ""}</span>
+        <span class="voti">
+          <button class="si ${a.voto === "si" ? "attivo" : ""}" data-id="${esc(a.id)}" data-voto="si">👍 interessante</button>
+          <button class="no ${a.voto === "no" ? "attivo" : ""}" data-id="${esc(a.id)}" data-voto="no">👎 no</button>
+        </span>
+      </div>
+    </article>`).join("");
+}
+
+async function caricaAgenzie() {
+  const { agenzie } = await (await fetch("/api/agenzie")).json();
+  document.querySelector("#agenzie summary").textContent = `Le ${agenzie.length} agenzie che affittano in zona, col telefono`;
+  document.getElementById("elencoAgenzie").innerHTML = agenzie.map(g => `
+    <div class="riga-agenzia"><span><b>${esc(g.agenzia)}</b> <span class="dove">· ${g.annunci} ${g.annunci === 1 ? "annuncio" : "annunci"} · ${esc(g.comuni.join(", "))}</span></span>
+      ${g.telefono ? `<a class="tel" href="tel:+34${esc(g.telefono.replace(/\D/g, ""))}">+34 ${esc(g.telefono)}</a>` : '<span class="dove">telefono sull\'annuncio</span>'}</div>`).join("");
+}
+
+document.getElementById("elenco").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-voto]");
+  if (!b) return;
+  const a = dati.annunci.find(x => x.id === b.dataset.id);
+  const voto = a.voto === b.dataset.voto ? null : b.dataset.voto;   // secondo clic = annulla
+  await fetch("/api/voto", { method: "POST", body: JSON.stringify({ id: a.id, voto }) });
+  a.voto = voto;
+  disegna();
+});
+
+let criteriPronti = false;   // finché i criteri salvati non sono caricati non si salva niente
+async function aggiorna() {
+  const stato = document.getElementById("stato");
+  if (!criteriPronti) { stato.textContent = "Criteri non ancora caricati: ricarica la pagina."; return; }
+  stato.textContent = "Aggiorno…";
+  await fetch("/api/criteri", { method: "POST", body: JSON.stringify(leggiModulo()) });
+  await caricaAnnunci();
+  stato.textContent = "Ricerca aggiornata alle " + new Date().toLocaleTimeString("it-IT").slice(0, 5);
+}
+document.getElementById("criteri").addEventListener("submit", e => { e.preventDefault(); aggiorna(); });
+let attesa;
+const presto = () => { clearTimeout(attesa); attesa = setTimeout(aggiorna, 700); };
+document.getElementById("criteri").addEventListener("change", presto);
+document.getElementById("criteri").addEventListener("input", e => { if (e.target.type === "number") presto(); });
+for (const id of ["soloNuovi", "soloRibassi", "soloPrivati", "nascondiNo", "ordine"]) document.getElementById(id).addEventListener("change", disegna);
+
+caricaCriteri().then(() => { criteriPronti = true; }).then(caricaAnnunci).then(caricaAgenzie);
+</script>
+</body>
+</html>
